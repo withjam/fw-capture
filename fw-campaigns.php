@@ -9,6 +9,54 @@
 * License: Apache 2.0
 **/
 
+  if (is_admin()) {
+    add_action('admin_menu', 'fw_campaign_admin_menu');
+    add_action( 'admin_init', 'fw_campaign_register_settings' );
+    add_action( 'admin_post_fw_capture_create_code', 'fw_capture_create_code' );
+    add_action( 'admin_post_fw_capture_update_code', 'fw_capture_update_code' );
+    add_action( 'admin_post_fw_capture_delete_code', 'fw_capture_delete_code' );
+  }
+
+  function fw_campaign_register_settings() {
+    register_setting( 'fw-capture-options', 'fw_capture_submission_url' );
+    register_setting( 'fw-capture-options', 'fw_capture_disclaimer' );
+    register_setting( 'fw-capture-options', 'fw_capture_button_label' );
+    register_setting( 'fw-capture-options', 'fw_capture_delay' );
+  }
+
+  function fw_capture_update_code() {
+
+  }
+
+  function fw_capture_create_code() {
+
+  }
+
+  function fw_capture_delete_code() {
+    
+  }
+
+
+  function fw_campaign_admin_menu() {
+    add_menu_page( 'F+W Email Capture Options', 'F+W Email Capture', 'manage_options', 'fw-capture-email-options', 'fw_campaign_manage_options');
+    add_submenu_page( 'fw-capture-email-options', 'F+W Email Capture Settings', 'Plugin Settings', 'manage_options', 'fw-capture-email-options', 'fw_campaign_manage_options');
+    add_submenu_page( 'fw-capture-email-options', 'F+W Email Captre Campaign Codes', 'Campaign Codes', 'manage_options', 'fw-capture-email-codes', 'fw_capture_manage_codes' );
+  }
+
+  function fw_capture_manage_codes() {
+    if ( !current_user_can( 'manage_options' ) )  {
+      wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
+    }
+    require(plugin_dir_path( dirname(__FILE__) ) . 'fw-campaigns/admin/fw-capture-manage-codes-page.php');
+  }
+
+  function fw_campaign_manage_options() {
+    if ( !current_user_can( 'manage_options' ) )  {
+      wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
+    }
+    require(plugin_dir_path( dirname(__FILE__) ) . 'fw-campaigns/admin/fw-campaigns-admin-page.php');
+  }
+
   function fw_campaign_footer() {
     $url = plugins_url();
     $html = <<<EOT
