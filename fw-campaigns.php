@@ -47,6 +47,8 @@
     if ( !current_user_can( 'manage_options' ) )  {
       wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
     }
+    wp_enqueue_media();
+    $utm_codes = get_option('fw_capture_utm_codes', []);
     require(plugin_dir_path( dirname(__FILE__) ) . 'fw-campaigns/admin/fw-capture-manage-codes-page.php');
   }
 
