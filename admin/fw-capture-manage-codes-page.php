@@ -58,6 +58,7 @@ a { cursor: pointer; }
             </div>
             <a id="upload_image_button">Select Image</a>
             <input type='hidden' name='image_attachment_url' id='image_attachment_url' value=''>
+            <input type='hidden' name='image_attachment_w' id='image_attachment_w' value=''>
           </td>
         </tr>
         <tr>
@@ -91,7 +92,8 @@ a { cursor: pointer; }
         action: action,
         code: frm.find('input[name="utm_code"]').val(),
         title: frm.find('input[name="title"]').val(),
-        img_id: frm.find('input[name="image_attachment_id"]').val(),
+        img_url: frm.find('input[name="image_attachment_url"]').val(),
+        img_w: frm.find('input[name="image_attachment_w"]').val(),
         desc: frm.find('textarea[name="desc"]').val(),
         offer_url: frm.find('input[name="url"]').val(),
       }
@@ -132,6 +134,8 @@ a { cursor: pointer; }
           edit_form.find('input[name="utm_code"]').attr('disabled','disabled').val(d.code);
           edit_form.find('input[name="title"]').val(d.title);
           edit_form.find('img#image-preview').attr('src',d.img);
+          edit_form.find('input#image_attachment_url').val(d.img);
+          edit_form.find('input#image_attachment_w').val(d.width);
           edit_form.find('textarea[name="desc"]').val(d.desc);
           edit_form.find('input[name="offer_url"]').val(d.offer_url);
           edit_form_action.val('fw_capture_update_code');
@@ -169,8 +173,10 @@ a { cursor: pointer; }
             // We set multiple to false so only get one image from the uploader
             attachment = wpmedia.state().get('selection').first().toJSON();
             // Do something with attachment.id and/or attachment.url here
-            $( '#image-preview' ).attr( 'src', attachment.url ).css( 'width', 'auto' );
+            console.log('attachment', attachment);
+            $( '#image-preview' ).attr( 'src', attachment.url );
             $( '#image_attachment_url' ).val( attachment.url );
+            $( '#image_attachment_w' ).val( attachment.width );
           });
         }
 
