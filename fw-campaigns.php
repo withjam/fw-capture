@@ -28,7 +28,7 @@
     $data = array();
     $data['code'] = $_POST['utm_code'];
     $data['title'] = $_POST['title'];
-    $data['img_id'] = $_POST['image_attachment_url'];
+    $data['img'] = $_POST['image_attachment_url'];
     $data['desc'] = $_POST['desc'];
     $data['offer_url'] = $_POST['offer_url'];
     return $data;
@@ -62,7 +62,7 @@
   function fw_capture_delete_code() {
     $code = $_POST['utm_code'];
     $arr = get_option('fw_capture_utm_codes', []);
-    $pos = array_search($code, $arr);
+    $pos = array_search($code, $arr); 
     if ($pos !== false) {
       unset($arr[$pos]);
       update_option('fw_capture_utm_codes', $arr);

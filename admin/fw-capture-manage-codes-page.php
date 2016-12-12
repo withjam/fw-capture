@@ -12,6 +12,7 @@ a { cursor: pointer; }
         <th scope="col" class="manage-column">Campaign Code</th>
         <th scope="col" class="manage-column">Title</th>
         <th scope="col" class="manage-column">Description</th>
+        <th scope="col" class="manage-column">Image</th>
         <th scope="col" class="manage-column">Download Link</th>
         <th class="column-cb check-column" style="width: 95px;"></th>
       </tr>
@@ -22,13 +23,14 @@ a { cursor: pointer; }
       <tr>
         <td><?php echo $utm_data['code']?></td>
         <td><?php echo $utm_data['title']?></td>
-        <td><div title="<?php echo $utm_data['desc']?>" style="text-overflow: ellipsis; width:98%; overflow: hidden; white-space: nowrap;"><?php echo $utm_data['desc']?></td>
+        <td><div title="<?php echo $utm_data['desc']?>" style="text-overflow: ellipsis; width:98%; overflow: visible;"><?php echo $utm_data['desc']?></td>
+        <td><img src="<?php echo $utm_data['img'] ?>" style="width:80px"></td>
         <td><?php echo $utm_data['offer_url']?></td>
         <td><a class="editCode" data-utm-code="<?php echo $utm_data["code"] ?>">edit</a>&nbsp;&nbsp;&nbsp;<a class="deleteCode delete"  data-utm-code="<?php echo $utm_data["code"] ?>">delete</a></td>
       </tr>
     <?php } ?>
       <tr>
-        <td colspan="4"><a class="addNewCode">+ Add New Code</a></td>
+        <td colspan="6"><a class="addNewCode">+ Add New Code</a></td>
       </tr>
     </table>
 
@@ -52,10 +54,10 @@ a { cursor: pointer; }
           <th><label for="fw-capture-img">Image</label></th>
           <td>
             <div class='image-preview-wrapper'>
-              <img id='image-preview' src='' width='100' height='100' style='max-height: 100px; width: 100px;'>
+              <img id='image-preview' src='' width='80'>
             </div>
             <a id="upload_image_button">Select Image</a>
-            <input type='hidden' name='image_attachment_url' id='image_attachment_id' value=''>
+            <input type='hidden' name='image_attachment_url' id='image_attachment_url' value=''>
           </td>
         </tr>
         <tr>
@@ -82,9 +84,9 @@ a { cursor: pointer; }
 
     function utm_code_submit() {
       var frm = jQuery('#fw_code_form form');
-      console.log('submit form');
       var post_url = frm.attr('action');
       var action = frm.find('input[name="action"]').val();
+      frm.find('input[name="utm_code"]').removeAttr('disabled');
       var data = {
         action: action,
         code: frm.find('input[name="utm_code"]').val(),
@@ -99,7 +101,6 @@ a { cursor: pointer; }
         alert('UTM Code is required.');
         return false;
       } 
-
       return true;
 
     }
@@ -121,10 +122,20 @@ a { cursor: pointer; }
         var t = jQuery(this);
         var code = t.data('utm-code');
         if (t.is('.addNewCode')) {
+          edit_form.find('input[name="action"]').removeAttr('disabled');
           edit_form_action.val('fw_capture_create_code');
           showEditForm('Add');
         } else if (t.is('.cancelEdit')) {
           hideEditForm();
+        } else if (t.is('.editCode')) {
+          var d = utm_codes[code];
+          edit_form.find('input[name="utm_code"]').attr('disabled','disabled').val(d.code);
+          edit_form.find('input[name="title"]').val(d.title);
+          edit_form.find('img#image-preview').attr('src',d.img);
+          edit_form.find('textarea[name="desc"]').val(d.desc);
+          edit_form.find('input[name="offer_url"]').val(d.offer_url);
+          edit_form_action.val('fw_capture_update_code');
+          showEditForm('Edit');
         } else if (t.is('.deleteCode') && confirm('Are you sure you want to delete "' + code + '"?')) {
           if (!code) {
             throw 'No code for deletion!';
