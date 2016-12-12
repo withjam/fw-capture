@@ -86,19 +86,18 @@
     wp_enqueue_media();
     $utm_codes = get_option('fw_capture_utm_codes', []);
     $utm_code_data = array();
-    print_r($utm_codes);
     foreach($utm_codes as $code) {
       $json = json_decode( get_option('fw_capture_utm_code_' . $code), '{}');
       $utm_code_data[$code] = $json;
     }
-    require(plugin_dir_path( dirname(__FILE__) ) . 'fw-campaigns/admin/fw-capture-manage-codes-page.php');
+    require(plugin_dir_path( dirname(__FILE__) ) . 'fw-capture/admin/fw-capture-manage-codes-page.php');
   }
 
   function fw_campaign_manage_options() {
     if ( !current_user_can( 'manage_options' ) )  {
       wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
     }
-    require(plugin_dir_path( dirname(__FILE__) ) . 'fw-campaigns/admin/fw-campaigns-admin-page.php');
+    require(plugin_dir_path( dirname(__FILE__) ) . 'fw-capture/admin/fw-capture-admin-page.php');
   }
 
   function fw_campaign_footer() {
