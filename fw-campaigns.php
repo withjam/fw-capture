@@ -109,11 +109,6 @@
     $interDelay = get_option('fw_capture_delay');
     $interTitle = get_option('fw_capture_inter_title', 'Join Our Mailing List!');
     $interDesc = get_option('fw_capture_inter_desc', 'Enter your email address below to receive special offers and exciting updates from Interweave.com.');
-    // setup interstitial code if a delay is set and the cookie is not present
-    if ($interDelay && !isset($_COOKIE['fw_capture_seen'])) {
-      $interDelayMS = intval($interDelay) * 1000;
-      echo "<script>window.setTimeout(function() { fw_capture.openModal({ width: 375, title: '{$interTitle}', desc: '{$interDesc}' }); }, {$interDelayMS});</script>";
-    }
     $plugin_footer = <<< EOT
     <style>body.noscroll{overflow:hidden}#fw-overlay-modal{z-index:10000;position:fixed;width:100%;height:100%;top:0;left:0;opacity:0;overflow:auto;transition:opacity .5s linear;background-color:rgba(0,0,0,.85);text-align:center}#fw-overlay-modal form{display:inline-block;position:relative;top:10%;min-width:25%;min-height:50%;overflow:visible;background:#FFF;margin-bottom:10%}#fw-overlay-modal p{ margin: 20px 8px;line-height: 1.55em;}#fw-overlay-modal h4{ margin: 25px 0 15px }#fw-overlay-modal p.small{line-height:1.25em;font-size:0.85em}#fw-overlay-modal .form-group{margin:15px}#fw-overlay-modal label{color:#40A8C5}#fw-overlay-modal.fadeout{opacity:0}#fw-overlay-modal.fadein{opacity:1}#fw-overlay-modal .fw-overlay-close{display:inline-block;-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;width:.4em;height:.4em;position:absolute;top:-25px;right:-25px;border:none;-webkit-border-radius:1em;border-radius:1em;font:400 8em/normal Arial,Helvetica,sans-serif;color:rgba(0,0,0,1);-o-text-overflow:clip;text-overflow:clip;background:#40A8C5;cursor:pointer}#fw-overlay-modal .fw-overlay-close:after,#fw-overlay-modal .fw-overlay-close:before{display:inline-block;width:.25em;height:.075em;position:absolute;content:"";top:.165em;left:.075em;border:none;font:400 100%/normal Arial,Helvetica,sans-serif;color:rgba(0,0,0,1);-o-text-overflow:clip;text-overflow:clip;background:#fff;text-shadow:none}#fw-overlay-modal .fw-overlay-close:before{-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;-webkit-transform:rotateZ(45deg);transform:rotateZ(45deg)}#fw-overlay-modal .fw-overlay-close:after{-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;-webkit-transform:rotateZ(-45deg);transform:rotateZ(-45deg)}#fw-overlay-modal.form-error input.required{border-color:red;background-color:#FEE}#fw-overlay-modal .error-message{display:none;color:red;font-size:.875em}#fw-overlay-modal.form-error .error-message{display:block}</style>
     <div style="opacity: 0; width: 0; height: 0; position: fixed; bottom: 0; left: 0;overflow: hidden: z-index: 1"><iframe name="fw-capture-submission-iframe" id="fw-capture-submission-iframe"></iframe></div>
@@ -225,6 +220,12 @@ EOT;
 EOT;
 
         echo $html;
+      }
+    } else {
+      // setup interstitial code if a delay is set and the cookie is not present
+      if ($interDelay && !isset($_COOKIE['fw_capture_seen'])) {
+        $interDelayMS = intval($interDelay) * 1000;
+        echo "<script>window.setTimeout(function() { fw_capture.openModal({ code: 'iw_interstitial', width: 375, title: '{$interTitle}', desc: '{$interDesc}' }); }, {$interDelayMS});</script>";
       }
     }
   }
