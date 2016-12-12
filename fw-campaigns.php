@@ -105,13 +105,27 @@
     // utm capture code
     $disclaimer = get_option('fw_capture_disclaimer');
     $btnLabel = get_option('fw_capture_button_label', 'Sign Up');
-    $interDelay = get_option('fw_capture_disclaimer');
-    $interTitle = get_option('fw_capture_button_label', 'Join Our Mailing List!');
+    $interDelay = get_option('fw_capture_delay');
+    $interTitle = get_option('fw_capture_inter_title', 'Join Our Mailing List!');
+    $interDesc = get_option('fw_capture_inter_desc', 'Enter your email address below to receive special offers and exciting updates from Interweave.com.');
+    // setup interstitial code if a delay is set and the cookie is not present
+    if ($interDelay && !isset($_COOKIE['fw_capture_seen'])) {
+      $interDelayMS = intval($interDelay) * 1000;
+      echo "<script>window.setTimeout(function() { fw_capture.openModal({ width: 375, title: '{$interTitle}', desc: '{$interDesc}' }); }, {$interDelayMS});</script>";
+    }
     $plugin_footer = <<< EOT
-    <style>body.noscroll{overflow:hidden}#fw-overlay-modal{z-index:10000;position:fixed;width:100%;height:100%;top:0;left:0;opacity:0;overflow:auto;transition:opacity .5s linear;background-color:rgba(0,0,0,.85);text-align:center}#fw-overlay-modal form{display:inline-block;position:relative;top:10%;min-width:25%;min-height:80%;overflow:visible;background:#FFF;margin-bottom:10%}#fw-overlay-modal p{ margin: 20px 0;line-height: 1.55em;}#fw-overlay-modal h4{ margin: 15px 0 }#fw-overlay-modal p.small{line-height:1.25em;font-size:0.85em}#fw-overlay-modal .form-group{margin:15px}#fw-overlay-modal label{color:#40A8C5}#fw-overlay-modal.fadeout{opacity:0}#fw-overlay-modal.fadein{opacity:1}#fw-overlay-modal .fw-overlay-close{display:inline-block;-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;width:.4em;height:.4em;position:absolute;top:-25px;right:-25px;border:none;-webkit-border-radius:1em;border-radius:1em;font:400 8em/normal Arial,Helvetica,sans-serif;color:rgba(0,0,0,1);-o-text-overflow:clip;text-overflow:clip;background:#40A8C5;cursor:pointer}#fw-overlay-modal .fw-overlay-close:after,#fw-overlay-modal .fw-overlay-close:before{display:inline-block;width:.25em;height:.075em;position:absolute;content:"";top:.165em;left:.075em;border:none;font:400 100%/normal Arial,Helvetica,sans-serif;color:rgba(0,0,0,1);-o-text-overflow:clip;text-overflow:clip;background:#fff;text-shadow:none}#fw-overlay-modal .fw-overlay-close:before{-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;-webkit-transform:rotateZ(45deg);transform:rotateZ(45deg)}#fw-overlay-modal .fw-overlay-close:after{-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;-webkit-transform:rotateZ(-45deg);transform:rotateZ(-45deg)}#fw-overlay-modal.form-error input{border-color:red;background-color:#FEE}#fw-overlay-modal .error-message{display:none;color:red;font-size:.875em}#fw-overlay-modal.form-error .error-message{display:block}</style>
+    <style>body.noscroll{overflow:hidden}#fw-overlay-modal{z-index:10000;position:fixed;width:100%;height:100%;top:0;left:0;opacity:0;overflow:auto;transition:opacity .5s linear;background-color:rgba(0,0,0,.85);text-align:center}#fw-overlay-modal form{display:inline-block;position:relative;top:10%;min-width:25%;min-height:50%;overflow:visible;background:#FFF;margin-bottom:10%}#fw-overlay-modal p{ margin: 20px 8px;line-height: 1.55em;}#fw-overlay-modal h4{ margin: 25px 0 15px }#fw-overlay-modal p.small{line-height:1.25em;font-size:0.85em}#fw-overlay-modal .form-group{margin:15px}#fw-overlay-modal label{color:#40A8C5}#fw-overlay-modal.fadeout{opacity:0}#fw-overlay-modal.fadein{opacity:1}#fw-overlay-modal .fw-overlay-close{display:inline-block;-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;width:.4em;height:.4em;position:absolute;top:-25px;right:-25px;border:none;-webkit-border-radius:1em;border-radius:1em;font:400 8em/normal Arial,Helvetica,sans-serif;color:rgba(0,0,0,1);-o-text-overflow:clip;text-overflow:clip;background:#40A8C5;cursor:pointer}#fw-overlay-modal .fw-overlay-close:after,#fw-overlay-modal .fw-overlay-close:before{display:inline-block;width:.25em;height:.075em;position:absolute;content:"";top:.165em;left:.075em;border:none;font:400 100%/normal Arial,Helvetica,sans-serif;color:rgba(0,0,0,1);-o-text-overflow:clip;text-overflow:clip;background:#fff;text-shadow:none}#fw-overlay-modal .fw-overlay-close:before{-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;-webkit-transform:rotateZ(45deg);transform:rotateZ(45deg)}#fw-overlay-modal .fw-overlay-close:after{-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;-webkit-transform:rotateZ(-45deg);transform:rotateZ(-45deg)}#fw-overlay-modal.form-error input{border-color:red;background-color:#FEE}#fw-overlay-modal .error-message{display:none;color:red;font-size:.875em}#fw-overlay-modal.form-error .error-message{display:block}</style>
     <script>
     // fw utm campaign script
     (function() {
+
+      function setCookie(cname, cvalue, exdays) {
+          var d = new Date();
+          d.setTime(d.getTime() + (exdays*24*60*60*1000));
+          var expires = "expires="+ d.toUTCString();
+          document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+      }
+
       // regex for validating email format
       var email_pattern = /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/g;
 
@@ -132,7 +146,18 @@
         fw_capture.overlay = document.createElement('DIV');
         fw_capture.overlay.id = 'fw-overlay-modal';
 
-        var form = '<form id="optin-form" style="width: ' + offerData.width + 'px;"><a class="fw-overlay-close"></a><div id="fw-overlay-modal-content-wrapper"><h4>' + offerData.title + '</h4><img src="' + offerData.img +'"><p>' + offerData.desc + '</p><input type="hidden" name="fw_capture_offer_url" value="' + offerData.offer_url + '"></div><div class="overlay-capture-form"><div class="form-group"><label for="fw-campaign-email-input">Enter Your Email Address</label> <div class="error-message">Please enter a valid email</div><input id="fw-campaign-email-input" type="email" class="form-control" placeholder="your@email.com"></div><div class="form-group"><a class="btn btn-primary fw-overlay-submit">' + ( fw_capture.btnLabel || "Sign Up" )+ '</a><p class="small"><em>' + fw_capture.disclaimer + '</em></p></div></div></form>';
+        var form = '<form id="optin-form" style="width: ' + offerData.width + 'px;"><a class="fw-overlay-close"></a><div id="fw-overlay-modal-content-wrapper"><h4>' + offerData.title + '</h4>';
+        if (offerData.img) {
+          form += '<img src="' + offerData.img +'">';
+        }
+        if (offerData.desc) {
+          form += '<p>' + offerData.desc + '</p>'
+        }
+        if (offerData.offer_url) {
+          form += '<input type="hidden" name="fw_capture_offer_url" value="' + offerData.offer_url + '">';
+        }
+
+        form += '</div><div class="overlay-capture-form"><div class="form-group"><label for="fw-campaign-email-input">Enter Your Email Address</label> <div class="error-message">Please enter a valid email</div><input id="fw-campaign-email-input" type="email" class="form-control" placeholder="your@email.com"></div><div class="form-group"><a class="btn btn-primary fw-overlay-submit">' + ( fw_capture.btnLabel || "Sign Up" )+ '</a><p class="small"><em>' + fw_capture.disclaimer + '</em></p></div></div></form>';
         
         fw_capture.overlay.innerHTML = form;
 
@@ -140,6 +165,8 @@
 
         fw_capture.activeOverlay = jQuery(document.getElementById('fw-overlay-modal')).on('click', fw_capture.handleClick);
         window.setTimeout(function() { fw_capture.activeOverlay.addClass('fadein'); }, 100);
+
+        setCookie('fw_capture_seen', new Date(), 30);
       }
 
       fw_capture.closeModal = function() {
@@ -153,10 +180,11 @@
       }
 
       fw_capture.handleClick = function(evt) {
-        var target = jQuery(this);;
-        if (target.is('fw-overlay-cancel')) {
+        var target = jQuery(evt.target);
+        console.log('handleClick', target);
+        if (target.is('.fw-overlay-cancel, .fw-overlay-close')) {
           fw_capture.closeModal();
-        } else if (target.is('fw-overlay-submit')) {
+        } else if (target.is('.fw-overlay-submit')) {
           var email = document.getElementById('fw-campaign-email-input').value;
           fw_capture.activeOverlay.removeClass('form-error');
           if (!email_pattern.test(email)) {
