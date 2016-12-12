@@ -24,16 +24,51 @@
     register_setting( 'fw-capture-options', 'fw_capture_delay' );
   }
 
-  function fw_capture_update_code() {
+  function fw_parse_utm_data_post() {
+    $data = array();
+    $data['code'] = $_POST['utm_code'];
+    $data['title'] = $_POST['title'];
+    $data['img_id'] = $_POST['image_attachment_url'];
+    $data['desc'] = $_POST['desc'];
+    $data['offer_url'] = $_POST['offer_url'];
+    return $data;
+  }
 
+  function fw_capture_update_code() {
+    $data = fw_parse_utm_data_post();
+    $code = $data['code'];
+    $opt_name = 'fw_capture_utm_code_' . $code;
+    // make sure already exists since we aren't updating the main array
+    if (get_option($opt_name)) {
+      update_option($opt_name, json_encode($data));
+    }
+    wp_redirect(admin_url('admin.php?page=fw-capture-email-codes'));
   }
 
   function fw_capture_create_code() {
-
+    $data = fw_parse_utm_data_post();
+    $code = $data['code'];
+    $opt_name = 'fw_capture_utm_code_' . $code;
+    // make sure it doesn't already exist, so we don't duplicate keys in the array
+    if (!get_option($opt_name)) {
+      $arr = get_option('fw_capture_utm_codes', []);
+      $arr[] = $code;
+      update_option('fw_capture_utm_codes', $arr);
+      add_option($opt_name, json_encode($data));
+    }
+    wp_redirect(admin_url('admin.php?page=fw-capture-email-codes'));
   }
 
   function fw_capture_delete_code() {
-    
+    $code = $_POST['utm_code'];
+    $arr = get_option('fw_capture_utm_codes', []);
+    $pos = array_search($code, $arr);
+    if ($pos !== false) {
+      unset($arr[$pos]);
+      update_option('fw_capture_utm_codes', $arr);
+      delete_option('fw_capture_utm_code_' . $code);      
+    }
+    wp_redirect(admin_url('admin.php?page=fw-capture-email-codes'));
   }
 
 
@@ -49,6 +84,12 @@
     }
     wp_enqueue_media();
     $utm_codes = get_option('fw_capture_utm_codes', []);
+    $utm_code_data = array();
+    print_r($utm_codes);
+    foreach($utm_codes as $code) {
+      $json = json_decode( get_option('fw_capture_utm_code_' . $code), '{}');
+      $utm_code_data[$code] = $json;
+    }
     require(plugin_dir_path( dirname(__FILE__) ) . 'fw-campaigns/admin/fw-capture-manage-codes-page.php');
   }
 
