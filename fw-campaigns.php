@@ -74,13 +74,13 @@
 
 
   function fw_campaign_admin_menu() {
-    add_menu_page( 'F+W Email Capture Options', 'F+W Email Capture', 'manage_options', 'fw-capture-email-options', 'fw_campaign_manage_options');
-    add_submenu_page( 'fw-capture-email-options', 'F+W Email Capture Settings', 'Plugin Settings', 'manage_options', 'fw-capture-email-options', 'fw_campaign_manage_options');
-    add_submenu_page( 'fw-capture-email-options', 'F+W Email Captre Campaign Codes', 'Campaign Codes', 'manage_options', 'fw-capture-email-codes', 'fw_capture_manage_codes' );
+    add_menu_page( 'F+W Email Capture Options', 'F+W Email Capture', 'edit_posts', 'fw-capture-email-options', 'fw_campaign_manage_options');
+    add_submenu_page( 'fw-capture-email-options', 'F+W Email Capture Settings', 'Plugin Settings', 'edit_posts', 'fw-capture-email-options', 'fw_campaign_manage_options');
+    add_submenu_page( 'fw-capture-email-options', 'F+W Email Captre Campaign Codes', 'Campaign Codes', 'edit_posts', 'fw-capture-email-codes', 'fw_capture_manage_codes' );
   }
 
   function fw_capture_manage_codes() {
-    if ( !current_user_can( 'manage_options' ) )  {
+    if ( !current_user_can( 'edit_posts' ) )  {
       wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
     }
     wp_enqueue_media();
@@ -94,7 +94,7 @@
   }
 
   function fw_campaign_manage_options() {
-    if ( !current_user_can( 'manage_options' ) )  {
+    if ( !current_user_can( 'edit_posts' ) )  {
       wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
     }
     require(plugin_dir_path( dirname(__FILE__) ) . 'fw-capture/admin/fw-capture-admin-page.php');
