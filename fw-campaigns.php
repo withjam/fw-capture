@@ -231,8 +231,8 @@ EOT;
       // setup interstitial code if a delay is set and the cookie is not present
       if ($interDelay && !isset($_COOKIE['fw_capture_seen'])) {
         $interDelayMS = intval($interDelay) * 1000;
-        $interThanksPage = addslashes(get_option('fw_capture_thanks_page'));
-        $interThanksEmail = addslashes(get_option('fw_capture_thanks_email'));
+        $interThanksPage = esc_js(get_option('fw_capture_thanks_page'));
+        $interThanksEmail = esc_js(get_option('fw_capture_thanks_email'));
         echo "<script>window.setTimeout(function() { fw_capture.openModal({ code: 'iw_interstitial', width: 375, title: '{$interTitle}', desc: '{$interDesc}', thanks_email: '{$interThanksEmail}', thanks_page: '{$interThanksPage}' }); }, {$interDelayMS});</script>";
       }
     }
