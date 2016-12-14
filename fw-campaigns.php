@@ -206,7 +206,7 @@
 EOT;
     echo $plugin_footer; 
     // utm campaign specific
-    $code = $_GET['utm_campaign'];
+    $code = $_GET['fw_campaign'];
     if (isset($code)) {
       $codeData = get_option('fw_capture_utm_code_' . $code);
       if ($codeData) {
