@@ -22,6 +22,8 @@
     register_setting( 'fw-capture-options', 'fw_capture_disclaimer' );
     register_setting( 'fw-capture-options', 'fw_capture_button_label' );
     register_setting( 'fw-capture-options', 'fw_capture_delay' );
+    register_setting( 'fw-capture-options', 'fw_capture_thanks_page' );
+    register_setting( 'fw-capture-options', 'fw_capture_thanks_email' );
   }
 
   function fw_parse_utm_data_post() {
@@ -32,6 +34,8 @@
     $data['width'] = $_POST['image_attachment_w'];
     $data['desc'] = $_POST['desc'];
     $data['offer_url'] = $_POST['offer_url'];
+    $data['thanks_page'] = $_POST['thanks_page'];
+    $data['thanks_email'] = $_POST['thanks_email'];
     return $data;
   }
 
@@ -107,9 +111,9 @@
     $btnLabel = get_option('fw_capture_button_label', 'Sign Up');
     $interDelay = get_option('fw_capture_delay');
     $interTitle = get_option('fw_capture_inter_title', 'Join Our Mailing List!');
-    $interDesc = get_option('fw_capture_inter_desc', 'Enter your email address below to receive special offers and exciting updates from Interweave.com.');
+    $interDesc = addslashes(get_option('fw_capture_inter_desc', 'Enter your email address below to receive special offers and exciting updates from Interweave.com.'));
     $plugin_footer = <<< EOT
-    <style>body.noscroll{overflow:hidden}#fw-overlay-modal{z-index:10000;position:fixed;width:100%;height:100%;top:0;left:0;opacity:0;overflow:auto;transition:opacity .5s linear;background-color:rgba(0,0,0,.85);text-align:center}#fw-overlay-modal form{display:inline-block;position:relative;top:10%;min-width:25%;min-height:50%;overflow:visible;background:#FFF;margin-bottom:10%}#fw-overlay-modal p{ margin: 20px 8px;line-height: 1.55em;}#fw-overlay-modal h4{ margin: 25px 0 15px }#fw-overlay-modal p.small{line-height:1.25em;font-size:0.85em}#fw-overlay-modal .form-group{margin:15px}#fw-overlay-modal label{color:#40A8C5}#fw-overlay-modal.fadeout{opacity:0}#fw-overlay-modal.fadein{opacity:1}#fw-overlay-modal .fw-overlay-close{display:inline-block;-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;width:.4em;height:.4em;position:absolute;top:-25px;right:-25px;border:none;-webkit-border-radius:1em;border-radius:1em;font:400 8em/normal Arial,Helvetica,sans-serif;color:rgba(0,0,0,1);-o-text-overflow:clip;text-overflow:clip;background:#40A8C5;cursor:pointer}#fw-overlay-modal .fw-overlay-close:after,#fw-overlay-modal .fw-overlay-close:before{display:inline-block;width:.25em;height:.075em;position:absolute;content:"";top:.165em;left:.075em;border:none;font:400 100%/normal Arial,Helvetica,sans-serif;color:rgba(0,0,0,1);-o-text-overflow:clip;text-overflow:clip;background:#fff;text-shadow:none}#fw-overlay-modal .fw-overlay-close:before{-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;-webkit-transform:rotateZ(45deg);transform:rotateZ(45deg)}#fw-overlay-modal .fw-overlay-close:after{-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;-webkit-transform:rotateZ(-45deg);transform:rotateZ(-45deg)}#fw-overlay-modal.form-error input.required{border-color:red;background-color:#FEE}#fw-overlay-modal .error-message{display:none;color:red;font-size:.875em}#fw-overlay-modal.form-error .error-message{display:block}</style>
+    <style>body.noscroll{overflow:hidden}#fw-overlay-modal{z-index:10000;position:fixed;width:100%;height:100%;top:0;left:0;opacity:0;overflow:auto;transition:opacity .5s linear;background-color:rgba(0,0,0,.85);text-align:center}#fw-overlay-modal form{display:inline-block;position:relative;top:10%;min-width:25%;min-height:50%;overflow:visible;background:#FFF;margin-bottom:10%}#fw-overlay-modal p{ margin: 20px 8px;line-height: 1.55em;}#fw-overlay-modal h4{ margin: 25px 0 15px }#fw-overlay-modal p.small{line-height:1.25em;font-size:0.85em}#fw-overlay-modal .form-group{margin:15px}#fw-overlay-modal label{color:#40A8C5}#fw-overlay-modal.fadeout{opacity:0}#fw-overlay-modal.fadein{opacity:1}#fw-overlay-modal .fw-overlay-close{display:inline-block;-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;width:.4em;height:.4em;position:absolute;top:-25px;right:-25px;border:none;-webkit-border-radius:1em;border-radius:1em;font:400 8em/normal Arial,Helvetica,sans-serif;color:rgba(0,0,0,1);-o-text-overflow:clip;text-overflow:clip;background:#40A8C5;cursor:pointer}#fw-overlay-modal .fw-overlay-close:after,#fw-overlay-modal .fw-overlay-close:before{display:inline-block;width:.25em;height:.075em;position:absolute;content:"";top:.165em;left:.075em;border:none;font:400 100%/normal Arial,Helvetica,sans-serif;color:rgba(0,0,0,1);-o-text-overflow:clip;text-overflow:clip;background:#fff;text-shadow:none}#fw-overlay-modal .fw-overlay-close:before{-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;-webkit-transform:rotateZ(45deg);transform:rotateZ(45deg)}#fw-overlay-modal .fw-overlay-close:after{-webkit-box-sizing:content-box;-moz-box-sizing:content-box;box-sizing:content-box;-webkit-transform:rotateZ(-45deg);transform:rotateZ(-45deg)}#fw-overlay-modal.form-error input.required{border-color:red;background-color:#FEE}#fw-overlay-modal .error-message{display:none;color:red;font-size:.875em}#fw-overlay-modal.form-error .error-message{display:block}#fw-overlay-modal #fw-capture-form-thanks{display: none}#fw-overlay-modal.submitted #fw-capture-form-thanks{display:block}#fw-overlay-modal.submitted .overlay-capture-form{display:none}</style>
     <div style="opacity: 0; width: 0; height: 0; position: fixed; bottom: 0; left: 0;overflow: hidden: z-index: 1"><iframe name="fw-capture-submission-iframe" id="fw-capture-submission-iframe"></iframe></div>
     <script>
     // fw utm campaign script
@@ -153,11 +157,14 @@
         if (offerData.code) {
           form += '<input type="hidden" name="utm_campaign" value="' + offerData.code + '">';
         }
+        if (offerData.thanks_email) {
+         form += '<input type="hidden" name="email_text" value="' + offerData.thanks_email + '">'; 
+        }
         if (offerData.offer_url) {
           form += '<input type="hidden" name="offer_url" value="' + offerData.offer_url + '">';
         }
 
-        form += '</div><div class="overlay-capture-form"><div class="form-group"><label for="fw-campaign-email-input">Enter Your Email Address</label> <div class="error-message">Please enter a valid email</div><input id="fw-campaign-email-input" type="email" class="form-control required" placeholder="your@email.com" name="email"></div><div class="form-group"><input type="submit" class="btn btn-primary fw-overlay-submit" value="' + ( fw_capture.btnLabel || "Sign Up" )+ '"><p class="small"><em>' + fw_capture.disclaimer + '</em></p></div></div></form>';
+        form += '</div><div class="overlay-capture-form"><div class="form-group"><label for="fw-campaign-email-input">Enter Your Email Address</label> <div class="error-message">Please enter a valid email</div><input id="fw-campaign-email-input" type="email" class="form-control required" placeholder="your@email.com" name="email"></div><div class="form-group"><input type="submit" class="btn btn-primary fw-overlay-submit" value="' + ( fw_capture.btnLabel || "Sign Up" )+ '"><p class="small"><em>' + fw_capture.disclaimer + '</em></p></div></div><div id="fw-capture-form-thanks" class="form-group"><h4>Thank you!</h4><p>' + offerData.thanks_page + '</p><a class="btn btn-default fw-overlay-cancel">Done</a></div></form>';
         
         fw_capture.overlay.innerHTML = form;
 
@@ -195,7 +202,7 @@
           return false;
         } 
         window.setTimeout(function() {
-          fw_capture.activeOverlay.find('.overlay-capture-form').html('<div class="form-group"><h4>Thank you!</h4><a class="btn btn-default fw-overlay-cancel">Done</a></div>');
+          fw_capture.activeOverlay.addClass('submitted');
         },100);
         return true;
       }
@@ -224,7 +231,9 @@ EOT;
       // setup interstitial code if a delay is set and the cookie is not present
       if ($interDelay && !isset($_COOKIE['fw_capture_seen'])) {
         $interDelayMS = intval($interDelay) * 1000;
-        echo "<script>window.setTimeout(function() { fw_capture.openModal({ code: 'iw_interstitial', width: 375, title: '{$interTitle}', desc: '{$interDesc}' }); }, {$interDelayMS});</script>";
+        $interThanksPage = addslashes(get_option('fw_capture_thanks_page'));
+        $interThanksEmail = addslashes(get_option('fw_capture_thanks_email'));
+        echo "<script>window.setTimeout(function() { fw_capture.openModal({ code: 'iw_interstitial', width: 375, title: '{$interTitle}', desc: '{$interDesc}', thanks_email: '{$interThanksEmail}', thanks_page: '{$interThanksPage}' }); }, {$interDelayMS});</script>";
       }
     }
   }

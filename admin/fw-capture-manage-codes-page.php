@@ -14,6 +14,8 @@ a { cursor: pointer; }
         <th scope="col" class="manage-column">Description</th>
         <th scope="col" class="manage-column">Image</th>
         <th scope="col" class="manage-column">Download Link</th>
+        <th scope="col" class="manage-column">Thanks Page Text</th>
+        <th scope="col" class="manage-column">Email Thanks Text</th>
         <th class="column-cb check-column" style="width: 95px;"></th>
       </tr>
     </thead>
@@ -26,6 +28,8 @@ a { cursor: pointer; }
         <td><div title="<?php echo $utm_data['desc']?>" style="text-overflow: ellipsis; width:98%; overflow: visible;"><?php echo $utm_data['desc']?></td>
         <td><img src="<?php echo $utm_data['img'] ?>" style="width:80px"></td>
         <td><?php echo $utm_data['offer_url']?></td>
+        <td><?php echo $utm_data['thanks_page']?></td>
+        <td><?php echo $utm_data['thanks_email']?></td>
         <td><a class="editCode" data-utm-code="<?php echo $utm_data["code"] ?>">edit</a>&nbsp;&nbsp;&nbsp;<a class="deleteCode delete"  data-utm-code="<?php echo $utm_data["code"] ?>">delete</a></td>
       </tr>
     <?php } ?>
@@ -69,6 +73,14 @@ a { cursor: pointer; }
           <th><label for="fw-capture-download">Offer Download URL</label></th>
           <td><input type="text" name="offer_url" class="large-text"></td>
         </tr>
+        <tr>
+          <th><label for="fw-capture-thanks-page">Thanks Page Text</label></th>
+          <td><textarea rows="5" cols="25" name="thanks_page" class="large-text"></textarea></td>
+        </tr>
+        <tr>
+          <th><label for="fw-capture-thanks-email">Email Thanks Text</label></th>
+          <td><textarea rows="5" cols="25" name="thanks_email" class="large-text"></textarea></td>
+        </tr>
         </table>
         <p class="submit" style="margin-left: 15px">
           <input type="submit" name="submit" class="button button-primary" value="Save Changes">
@@ -96,6 +108,8 @@ a { cursor: pointer; }
         img_w: frm.find('input[name="image_attachment_w"]').val(),
         desc: frm.find('textarea[name="desc"]').val(),
         offer_url: frm.find('input[name="url"]').val(),
+        thanks_page: frm.find('textarea[name="thanks_page"]').val(),
+        thanks_email: frm.find('textarea[name="thanks_email"]').val()
       }
 
       console.log('data', data);
@@ -137,6 +151,8 @@ a { cursor: pointer; }
           edit_form.find('input#image_attachment_url').val(d.img);
           edit_form.find('input#image_attachment_w').val(d.width);
           edit_form.find('textarea[name="desc"]').val(d.desc);
+          edit_form.find('textarea[name="thanks_page"]').val(d.thanks_page);
+          edit_form.find('textarea[name="thanks_email"]').val(d.thanks_email);
           edit_form.find('input[name="offer_url"]').val(d.offer_url);
           edit_form_action.val('fw_capture_update_code');
           showEditForm('Edit');
