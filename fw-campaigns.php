@@ -168,7 +168,7 @@
         
         fw_capture.overlay.innerHTML = form;
 
-        document.body.append(fw_capture.overlay);
+        document.body.appendChild(fw_capture.overlay);
 
         fw_capture.activeOverlay = jQuery(document.getElementById('fw-overlay-modal')).on('click', fw_capture.handleClick);
         window.setTimeout(function() { fw_capture.activeOverlay.addClass('fadein'); }, 100);
