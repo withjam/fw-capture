@@ -15,6 +15,7 @@
     add_action( 'admin_post_fw_capture_create_code', 'fw_capture_create_code' );
     add_action( 'admin_post_fw_capture_update_code', 'fw_capture_update_code' );
     add_action( 'admin_post_fw_capture_delete_code', 'fw_capture_delete_code' );
+    add_action( 'admin_post_fw_capture_update_settings', 'fw_capture_update_settings' );
   }
 
   function fw_campaign_register_settings() {
@@ -24,6 +25,21 @@
     register_setting( 'fw-capture-options', 'fw_capture_delay' );
     register_setting( 'fw-capture-options', 'fw_capture_thanks_page' );
     register_setting( 'fw-capture-options', 'fw_capture_thanks_email' );
+  }
+
+  function fw_capture_set_fields($names) {
+    foreach($names as $n) {
+      $v = $_POST[$n];
+      if (isset($v)) {
+        update_option($n, $v);
+      }
+    }
+  }
+
+  function fw_capture_update_settings() {
+    $names = ['fw_capture_submission_url','fw_capture_disclaimer','fw_capture_button_label','fw_capture_delay','fw_capture_thanks_page','fw_capture_thanks_email'];
+    fw_capture_set_fields($names);
+    wp_redirect(admin_url('admin.php?page=fw-capture-email-options'));
   }
 
   function fw_parse_utm_data_post() {

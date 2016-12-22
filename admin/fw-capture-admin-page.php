@@ -3,9 +3,8 @@
 <div class="wrap" id="fw-campaign-manage-options">
   <h1>F+W Email Capture - Settings</h1>
 
-  <form method="post" action="options.php"> 
-      <?php settings_fields( 'fw-capture-options' ); ?>
-      <?php do_settings_sections( 'fw-capture-options' ); ?>
+  <form method="post" action="admin-post.php"> 
+    <input type="hidden" name="action" value="fw_capture_update_settings">
     <table class="form-table">
     <tr>
       <th scope="row"><label for="fw_capture_submit_url">Default Capture URL</label></th>
