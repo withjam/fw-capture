@@ -61,7 +61,7 @@
     $opt_name = 'fw_capture_utm_code_' . $code;
     // make sure already exists since we aren't updating the main array
     if (get_option($opt_name)) {
-      update_option($opt_name, json_encode($data));
+      update_option($opt_name, json_encode(preg_replace( "/\r|\n/", "<br>", $data )));
     }
     wp_redirect(admin_url('admin.php?page=fw-capture-email-codes'));
   }
@@ -75,7 +75,7 @@
       $arr = get_option('fw_capture_utm_codes', []);
       $arr[] = $code;
       update_option('fw_capture_utm_codes', $arr);
-      add_option($opt_name, json_encode($data));
+      add_option($opt_name, json_encode(preg_replace( "/\r|\n/", "<br>", $data )));
     }
     wp_redirect(admin_url('admin.php?page=fw-capture-email-codes'));
   }
