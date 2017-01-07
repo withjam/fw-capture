@@ -138,9 +138,12 @@ a { cursor: pointer; }
         var t = jQuery(this);
         var code = t.data('utm-code');
         if (t.is('.addNewCode')) {
-          edit_form.find('input[name="action"]').removeAttr('disabled');
+          edit_form.find('input[name="action"],input[name="utm_code"]').removeAttr('disabled');
           edit_form_action.val('fw_capture_create_code');
           edit_form.find('textarea,input[type="text"]').val('');
+          edit_form.find('img#image-preview').attr('src','about:blank');
+          edit_form.find('input#image_attachment_url').val('');
+          edit_form.find('input#image_attachment_w').val('');
           showEditForm('Add');
         } else if (t.is('.cancelEdit')) {
           hideEditForm();
