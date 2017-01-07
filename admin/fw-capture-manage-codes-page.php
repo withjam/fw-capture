@@ -140,6 +140,7 @@ a { cursor: pointer; }
         if (t.is('.addNewCode')) {
           edit_form.find('input[name="action"]').removeAttr('disabled');
           edit_form_action.val('fw_capture_create_code');
+          edit_form.find('textarea,input[type="text"]').val('');
           showEditForm('Add');
         } else if (t.is('.cancelEdit')) {
           hideEditForm();
