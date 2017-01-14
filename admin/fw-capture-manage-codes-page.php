@@ -11,11 +11,10 @@ a { cursor: pointer; }
       <tr>
         <th scope="col" class="manage-column">Campaign Code</th>
         <th scope="col" class="manage-column">Title</th>
+        <th scope="col" class="manage-column">Interest</th>
         <th scope="col" class="manage-column">Description</th>
         <th scope="col" class="manage-column">Image</th>
         <th scope="col" class="manage-column">Download Link</th>
-        <th scope="col" class="manage-column">Thanks Page Text</th>
-        <th scope="col" class="manage-column">Email Thanks Text</th>
         <th class="column-cb check-column" style="width: 95px;"></th>
       </tr>
     </thead>
@@ -25,11 +24,10 @@ a { cursor: pointer; }
       <tr>
         <td><?php echo $utm_data['code']?></td>
         <td><?php echo $utm_data['title']?></td>
+        <td><?php echo $utm_data['interest']?></td>
         <td><div title="<?php echo $utm_data['desc']?>" style="text-overflow: ellipsis; width:98%; overflow: visible;"><?php echo $utm_data['desc']?></td>
         <td><img src="<?php echo $utm_data['img'] ?>" style="width:80px"></td>
         <td><?php echo $utm_data['offer_url']?></td>
-        <td><?php echo $utm_data['thanks_page']?></td>
-        <td><?php echo $utm_data['thanks_email']?></td>
         <td><a class="editCode" data-utm-code="<?php echo $utm_data["code"] ?>">edit</a>&nbsp;&nbsp;&nbsp;<a class="deleteCode delete"  data-utm-code="<?php echo $utm_data["code"] ?>">delete</a></td>
       </tr>
     <?php } ?>
@@ -49,6 +47,19 @@ a { cursor: pointer; }
         <tr>
           <th><label for="fw-capture-utm-code">UTM Code</label></th>
           <td><input type="text" name="utm_code" class="large-text"></td>
+        </tr>
+        <tr>
+          <th><label for="fw-capture-interest">Interest</label></th>
+          <td><select type="text" name="interest">
+            <option>Beading</option>
+            <option>Crochet</option>
+            <option>Jewelry</option>
+            <option>Knitting</option>
+            <option>Needlework</option>
+            <option>Spinning</option>
+            <option>Weaving</option>
+            <option>Partners</option>
+          </select></td>
         </tr>
         <tr>
           <th><label for="fw-capture-title">Title</label></th>
@@ -103,6 +114,7 @@ a { cursor: pointer; }
       var data = {
         action: action,
         code: frm.find('input[name="utm_code"]').val(),
+        interest: frm.find('select[name="interest"').val(),
         title: frm.find('input[name="title"]').val(),
         img_url: frm.find('input[name="image_attachment_url"]').val(),
         img_w: frm.find('input[name="image_attachment_w"]').val(),
@@ -140,6 +152,7 @@ a { cursor: pointer; }
         if (t.is('.addNewCode')) {
           edit_form.find('input[name="action"],input[name="utm_code"]').removeAttr('disabled');
           edit_form_action.val('fw_capture_create_code');
+          edit_form.find('select[name="interest"]').val('');
           edit_form.find('textarea,input[type="text"]').val('');
           edit_form.find('img#image-preview').attr('src','about:blank');
           edit_form.find('input#image_attachment_url').val('');
@@ -151,6 +164,7 @@ a { cursor: pointer; }
           var d = utm_codes[code];
           edit_form.find('input[name="utm_code"]').attr('disabled','disabled').val(d.code);
           edit_form.find('input[name="title"]').val(d.title);
+          edit_form.find('select[name="interest"]').val(d.interest);
           edit_form.find('img#image-preview').attr('src',d.img);
           edit_form.find('input#image_attachment_url').val(d.img);
           edit_form.find('input#image_attachment_w').val(d.width);
