@@ -181,7 +181,7 @@
           form += '<input type="hidden" name="offer_url" value="' + offerData.offer_url + '">';
         }
         if (offerData.interest) {
-          form += '<input type="hidden" name="interest' + offerData.interest + '" value="Y">';
+          form += '<input type="hidden" name="interest[' + offerData.interest + ']" value="Y">';
         }
 
         form += '</div><div class="overlay-capture-form"><div class="form-group"><label for="fw-campaign-email-input">Enter Your Email Address</label> <div class="error-message">Please enter a valid email</div><input id="fw-campaign-email-input" type="email" class="form-control required" placeholder="your@email.com" name="email"></div><div class="form-group"><input type="submit" class="btn btn-primary fw-overlay-submit" value="' + ( fw_capture.btnLabel || "Sign Up" )+ '"><p class="small"><em>' + fw_capture.disclaimer + '</em></p></div></div><div id="fw-capture-form-thanks" class="form-group"><h4>Thank you!</h4><p>' + offerData.thanks_page + '</p><a class="btn btn-default fw-overlay-cancel">Done</a></div></form>';
